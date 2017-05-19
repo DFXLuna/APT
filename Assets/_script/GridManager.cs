@@ -1,16 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour {
+	// Lerp adapted from BlueRaja's correct lerp
 	public GameObject GridSpace;
 	public GameObject c;
 	public int numSpaces = 6;
 	public int spacesPerRow = 3;
+	public float lerpmax = 1.5f;
+	public float lerptime = .2f;
 	private GameObject[] GridSpaces;
-
+	// Maps GridSpace name to (startY, endY, start time) for lerp
+	private Dictionary<string, Vector3> lerptionary;
+	// TODO 
 	// Use this for initialization
 	void Start () {
+		lerptionary = new Dictionary<string, Vector3>();
 		// Create Grid
 		GridSpaces = new GameObject[numSpaces];
 		Vector2 xy;
@@ -26,38 +33,87 @@ public class GridManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		// Hilight gridspace on mouseover
+		// Push gridspace on mouseover
 		Ray mRay = 
 			c.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 		RaycastHit info;
 		string currMoving = (-1).ToString();
 		if(Physics.Raycast(mRay, out info, 100)){
-			if(info.collider.tag == "Grid"){
-				if(info.collider.transform.position.y != 2){
-					// Record name
-					currMoving = info.collider.name;
-					// Move Gridspace up
-					Vector3 currPos = info.collider.transform.position;
-					 currPos = Vector3.Lerp(
-						currPos, 
-						new Vector3(currPos.x, 2, currPos.z),
-						Time.deltaTime);
-					info.collider.transform.position = currPos;
-				}
+			if(info.collider.tag == "Grid" && 
+			!isLerpingUp(info.collider.name)){
+				startLerp(info.collider.gameObject, lerpmax);
+				currMoving = info.collider.name;
 			}
 		}
 		// Push all other platforms to original position
 		foreach(var space in GridSpaces){
-			if(space.name != currMoving &&
-			   space.transform.position.y != 0){
-				   Vector3 currPos = space.transform.position;
-				   currPos = Vector3.Lerp(
-					   currPos,
-					   new Vector3(currPos.x, 0, currPos.z),
-					   Time.deltaTime);
-					   space.transform.position = currPos;
-			   }
+			if(space.name != currMoving && 
+			(isLerpingUp(space.name)) || space.transform.position.y == lerpmax){
+				startLerp(space, 0);
+			}
 		}
+	}
 
+	void FixedUpdate(){
+		// Apply lerp to all lerping objects
+		var keys = new List<string>(lerptionary.Keys);
+		foreach(string k in keys){
+			float timeSinceStarted = Time.time - lerptionary[k].z;
+			float percentComplete = timeSinceStarted / lerptime;
+			int i = getIndex(k);
+			Vector3 currPos = GridSpaces[i].transform.position;
+			GridSpaces[i].transform.position = Vector3.Lerp(
+				new Vector3(currPos.x, lerptionary[k].x, currPos.z),
+				new Vector3(currPos.x, lerptionary[k].y, currPos.z),
+				percentComplete);
+			if(percentComplete >= 1.0f){
+				lerptionary.Remove(k);
+			}
+		}
+	}
+
+	void startLerp(GameObject GridSpace, float targetY){
+		lerptionary[GridSpace.name] = 
+			new Vector3(GridSpace.transform.position.y,targetY, Time.time);
+	}
+
+	bool isLerping(string GridSpaceName){
+		Vector3 a;
+		if(lerptionary.TryGetValue(GridSpaceName, out a)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	bool isLerpingUp(string GridSpaceName){
+		Vector3 a;
+		if(lerptionary.TryGetValue(GridSpaceName, out a)){
+			return (a.y == lerpmax);
+		}
+		else{
+			return false;
+		}
+	}
+
+	public int getIndex(GameObject GridSpace){
+		int ret = 0;
+		if(Int32.TryParse(GridSpace.name, out ret)){
+			return ret;
+		}
+		else{
+			return -1;
+		}
+	}
+
+	public int getIndex(string GridSpaceName){
+		int ret = 0;
+		if(Int32.TryParse(GridSpaceName, out ret)){
+			return ret;
+		}
+		else{
+			return -1;
+		}		
 	}
 }

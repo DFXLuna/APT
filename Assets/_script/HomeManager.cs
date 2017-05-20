@@ -27,13 +27,21 @@ public class HomeManager : MonoBehaviour {
 		}
 	}
 
-	bool isVacant(GameObject GridSpace){
+	public void DestroyHome(GameObject GridSpace){
+		if(!isVacant(GridSpace)){
+			int i = getIndex(GridSpace);
+			Destroy(homes[i]);
+			homes[i] = null;
+		}
+	}
+
+	private bool isVacant(GameObject GridSpace){
 		int i = getIndex(GridSpace);
 		if(homes[i] == null){ return true; }
 		else { return false; }
 	}
 
-	int getIndex(GameObject GridSpace){
+	private int getIndex(GameObject GridSpace){
 		return GetComponent<GridManager>().getIndex(GridSpace);
 	}
 }

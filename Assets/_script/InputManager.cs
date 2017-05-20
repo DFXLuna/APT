@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour {
 	public GameObject c;
 	// Allows different modes for input
-	private enum context{ build, select};
+	private enum context{ build, select, destroy };
 	private context currentContext;
 	// Hold camera's initial position
 	private Vector3 cameraPos;
@@ -22,6 +22,7 @@ public class InputManager : MonoBehaviour {
 		// Context Switcher/////////////////////////////////////////////////
 		if(Input.GetKeyDown(KeyCode.S)){ currentContext = context.select; }
 		else if(Input.GetKeyDown(KeyCode.B)){ currentContext = context.build; }
+		else if(Input.GetKeyDown(KeyCode.D)){ currentContext = context.destroy; }
 		// Build mode //////////////////////////////////////////////////////
 		if(currentContext == context.build){
 			// Build house
@@ -54,6 +55,22 @@ public class InputManager : MonoBehaviour {
 				}
 			}
 		}
+		// Destory Mode ////////////////////////////////////////////////////
+		else if(currentContext == context.destroy){
+			// Destroy house
+			if(Input.GetMouseButtonDown(0)){
+				Ray mRay = 
+					c.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+				RaycastHit info;
+				if(Physics.Raycast(mRay, out info, 100)){
+					Transform child;
+					if(info.collider.gameObject.FindChildwithTag("Home", out child)){
+						GetComponent<HomeManager>().DestroyHome(info.collider.gameObject);
+					}
+				}
+			}
+
+		}
 	}
 
 	// Helper functions to simplify camera focus
@@ -74,6 +91,7 @@ public class InputManager : MonoBehaviour {
 		string text = "";
 		if(currentContext == context.build){ text = "Build"; }
 		else if(currentContext == context.select){text = "Select"; }
+		else if(currentContext == context.destroy){text = "Destroy"; }
 		GUI.Box(new Rect(0, 0, 100, 25), text);
 	}
 }

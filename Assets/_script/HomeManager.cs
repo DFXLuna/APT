@@ -15,7 +15,7 @@ public class HomeManager : MonoBehaviour {
 	public void SpawnHome(GameObject GridSpace){
 		// TODO 
 		// animation
-		// .5 for GridSpace height + .4 for home offset
+		// .5 for GridSpace height + .4 for home offset(blender file)
 		if(isVacant(GridSpace)){
 			Vector3 pos = GridSpace.transform.position + new Vector3(0, 0.9f, 0);
 			GameObject toAdd = Instantiate(HomeA, pos, HomeA.transform.rotation);

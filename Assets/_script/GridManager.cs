@@ -14,7 +14,6 @@ public class GridManager : MonoBehaviour {
 	private GameObject[] GridSpaces;
 	// Maps GridSpace name to (startY, endY, start time) for lerp
 	private Dictionary<string, Vector3> lerptionary;
-	// TODO 
 	// Use this for initialization
 	void Start () {
 		lerptionary = new Dictionary<string, Vector3>();

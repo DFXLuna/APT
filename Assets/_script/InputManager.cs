@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour {
 	public GameObject c;
 	// Allows different modes for input
-	private enum context{ build, select, destroy };
+	public enum context{ build, select, destroy };
 	private context currentContext;
 	// Hold camera's initial position
 	private Vector3 cameraPos;
@@ -36,6 +36,12 @@ public class InputManager : MonoBehaviour {
 					}
 				}
 			}
+			if(Input.GetKeyDown(KeyCode.RightArrow)){
+				GetComponent<HomeManager>().nextHome();
+			}
+			else if(Input.GetKeyDown(KeyCode.LeftArrow)){
+				GetComponent<HomeManager>().prevHome();
+			}
 		}
 		// Select Mode /////////////////////////////////////////////////////
 		else if(currentContext == context.select){
@@ -65,7 +71,10 @@ public class InputManager : MonoBehaviour {
 				if(Physics.Raycast(mRay, out info, 100)){
 					Transform child;
 					if(info.collider.gameObject.FindChildwithTag("Home", out child)){
-						GetComponent<HomeManager>().DestroyHome(info.collider.gameObject);
+						if(GetComponent<HomeManager>().DestroyHome(info.collider.gameObject) &&
+						isCameraFocused()){
+							unfocus();
+						}
 					}
 				}
 			}
@@ -86,6 +95,9 @@ public class InputManager : MonoBehaviour {
 		c.GetComponent<CameraController>().unfocus();
 	}
 
+	public context getCurrentContext(){
+		return currentContext;
+	} 
 	void OnGUI(){
 		// Context indicator
 		string text = "";

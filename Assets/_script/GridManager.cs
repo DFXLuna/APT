@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour {
 	public GameObject c;
 	public int numSpaces = 6;
 	public int spacesPerRow = 3;
-	public float lerpmax = 1.5f;
+	public float lerpmax = .5f;
 	public float lerptime = .2f;
 	private GameObject[] GridSpaces;
 	// Maps GridSpace name to (startY, endY, start time) for lerp
@@ -30,7 +30,6 @@ public class GridManager : MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		// Push gridspace on mouseover
 		Ray mRay = 
@@ -38,8 +37,7 @@ public class GridManager : MonoBehaviour {
 		RaycastHit info;
 		string currMoving = (-1).ToString();
 		if(Physics.Raycast(mRay, out info, 100)){
-			if(info.collider.tag == "Grid" && 
-			!isLerpingUp(info.collider.name)){
+			if(info.collider.tag == "Grid"){
 				startLerp(info.collider.gameObject, lerpmax);
 				currMoving = info.collider.name;
 			}
@@ -55,7 +53,7 @@ public class GridManager : MonoBehaviour {
 
 	void FixedUpdate(){
 		// Apply lerp to all lerping objects
-		var keys = new List<string>(lerptionary.Keys);
+		List<string> keys = new List<string>(lerptionary.Keys);
 		foreach(string k in keys){
 			float timeSinceStarted = Time.time - lerptionary[k].z;
 			float percentComplete = timeSinceStarted / lerptime;

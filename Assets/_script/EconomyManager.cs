@@ -2,53 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO
-// Deal with IDs
-
 public class EconomyManager : MonoBehaviour {
 	public int startingCash = 400;
 	private int currentCash;
-	// Maps cash ID to cash amount, update interval and time offset
-	private Dictionary<string, Vector3> cashUpdateQueue;
+	// Maps Tenent ID to cash amount
+	private Dictionary<string, int> cashUpdateQueue;
+	private float timeOffset;
 
 	// Use this for initialization
 	void Start () {
 		currentCash = startingCash;
-		cashUpdateQueue = new Dictionary<string, Vector3>();
+		cashUpdateQueue = new Dictionary<string, int>();
+		timeOffset = Time.time;
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		updateCash();
-	}
-
-	private void updateCash(){
-		List<string> keys = new List<string>(cashUpdateQueue.Keys);
-		Vector3 temp;
-		float t = Time.time;
-		foreach(var k in keys){
-			temp = cashUpdateQueue[k];
-			if(t - temp.z >= temp.y){
-				currentCash += (int)temp.x;
-				temp.z = t;
-				cashUpdateQueue[k] = temp;
-			}
+		// Temporary 
+		if(Time.time - timeOffset >= 5){
+			timeOffset = Time.time;
+			updateCash();
 		}
 	}
 
-	public void EnqueueCash(string ID, Vector2 cashTime){
-		Vector3 v = new Vector3(cashTime.x, cashTime.y, Time.time);
-		cashUpdateQueue[ID] = v;
+	private void updateCash(){
+		foreach(string t in cashUpdateQueue.Keys){
+			currentCash += cashUpdateQueue[t];
+		}
 	}
 
-	public bool DequeueCash(string ID){
-		return cashUpdateQueue.Remove(ID);
+	public void EnqueueCash(string tenentName, int cash){
+		cashUpdateQueue[tenentName] = cash;
+	}
+
+	public bool DequeueCash(string tenentName){
+		return cashUpdateQueue.Remove(tenentName);
 	}
 
 	void OnGUI(){
 		string text = currentCash.ToString();
-		GUI.Box(new Rect(0, 54, 100, 25), text);
+		GUI.Box(new Rect(0, 27, 100, 25), text);
 
 	}
 }

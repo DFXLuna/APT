@@ -11,7 +11,7 @@ public class HomeManager : MonoBehaviour {
 	private enum home{ A, B };
 	private int numHomeTypes;
 	private home currentHome;
-	// Maps a home enum to a y axis offset
+	// Maps a home enum to a transform offset
 	private Dictionary<home, Vector3> homeOffsets;
 
 	void Start(){
@@ -30,22 +30,20 @@ public class HomeManager : MonoBehaviour {
 	public void SpawnHome(GameObject GridSpace){
 		// TODO 
 		// animation
-		if(isVacant(GridSpace)){
+		if(isVacantLot(GridSpace)){
 			Vector3 offset = new Vector3(0, .5f, 0) + getCurrentOffset();
 			Vector3 pos = GridSpace.transform.position + offset;
 			GameObject toAdd = Instantiate(
-				getCurrentHome(), pos, getCurrentHome().transform.rotation);
+				getCurrentHomeModel(), pos, getCurrentHomeModel().transform.rotation);
 			toAdd.transform.SetParent(GridSpace.transform);
-			if(isVacant(GridSpace)){
+			if(isVacantLot(GridSpace)){
 				int i = getIndex(GridSpace);
 				homes[i] = toAdd;
-				GetComponent<EconomyManager>().EnqueueCash(i.ToString(),new Vector2(50, 10));
-				GetComponent<EconomyManager>().EnqueueCash(i.ToString(),new Vector2(-20, 15));
 			}
 		}
 	}
 
-	public GameObject getCurrentHome(){
+	public GameObject getCurrentHomeModel(){
 		switch(currentHome){
 			case home.A:
 				return HomeA;
@@ -57,8 +55,10 @@ public class HomeManager : MonoBehaviour {
 	}
 
 	public bool DestroyHome(GameObject GridSpace){
-		if(!isVacant(GridSpace)){
+		if(!isVacantLot(GridSpace)){
 			int i = getIndex(GridSpace);
+			DequeueCash(i);
+			DequeueCash(i + numHomeTypes);
 			Destroy(homes[i]);
 			homes[i] = null;
 			return true;
@@ -83,10 +83,22 @@ public class HomeManager : MonoBehaviour {
 		}
 	}
 
-	private bool isVacant(GameObject GridSpace){
+	public bool registerTenant(string tenantName, int cash, GameObject home){
+		if(home.GetComponent<Tenant>().RegisterTenant(tenantName, cash)){
+			GetComponent<EconomyManager>().EnqueueCash(tenantName, cash);
+			return true;
+		}
+		return false;
+	}
+
+	private bool isVacantLot(GameObject GridSpace){
 		int i = getIndex(GridSpace);
 		if(homes[i] == null){ return true; }
 		else { return false; }
+	}
+
+	private bool isVacantHome(GameObject home){
+		return !(home.GetComponent<Tenant>().isOccupied());
 	}
 	
 	private Vector3 getCurrentOffset(){
@@ -96,9 +108,18 @@ public class HomeManager : MonoBehaviour {
 		homeOffsets[home.A] = new Vector3(0, .4f, 0);
 		homeOffsets[home.B] = new Vector3(1.05f, .52f, .4f);
 	}
+
 	// Helper methods
 	private int getIndex(GameObject GridSpace){
 		return GetComponent<GridManager>().getIndex(GridSpace);
+	}
+
+	private void EnqueueCash(string tenantName, int cash){
+		GetComponent<EconomyManager>().EnqueueCash(tenantName, cash);
+	}
+
+	private void DequeueCash(int ID){
+		GetComponent<EconomyManager>().DequeueCash(ID.ToString());
 	}
 
 	// Debug Gui
@@ -108,7 +129,7 @@ public class HomeManager : MonoBehaviour {
 			string text = "";
 			if(currentHome == home.A){ text = "Home: A"; }
 			else if(currentHome == home.B){ text = "Home: B"; }
-			GUI.Box(new Rect(0, 27, 100, 25), text);
+			GUI.Box(new Rect(0, 54, 100, 25), text);
 		}
 	}
 }

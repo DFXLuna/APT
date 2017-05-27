@@ -9,6 +9,8 @@
 * If models aren't appearing, make sure Blender is installed and reimport \_models
 
 ## Narrative file syntax(.slum)
+### Note
+* This will change when conditions are added
 ### Requirements
 * ASCII encoding
 * Each line of dialogue should occupy only one line in the file

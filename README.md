@@ -18,7 +18,7 @@
 * END       - Denotes the end of a scene.
 * SCENE [x] - Denotes number of scenes in the file.
 * |         - Invalid in dialogue and names.
-* \#        - Placed at the beginning of a line to indicated a comment.
+* \#        - Placed at the beginning of a line to indicate a comment.
 ### Line format
 * [name]|[text to be said]
 * Matt|This is what a line of dialogue looks like.

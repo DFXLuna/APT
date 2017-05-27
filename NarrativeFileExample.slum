@@ -1,0 +1,6 @@
+SCENE 1
+BEGIN
+Matt|This is an example Narrative file
+# This is a comment and will be ignored by the reader.
+Matt|Each line of dialogue is on it's own separate line. Additionally, each file line is considered one line of dialogue.
+END

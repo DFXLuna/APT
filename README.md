@@ -14,13 +14,14 @@
 * Each line of dialogue should occupy only one line in the file
 * File should begin with SCENE [x] where x is the number of scenes in the document
 ### Reserved Words
-* BEGIN     - Denotes the beginning of a scene
-* END       - Denotes the end of a scene
-* SCENE [x] - Denotes number of scenes in the file
+* BEGIN     - Denotes the beginning of a scene.
+* END       - Denotes the end of a scene.
+* SCENE [x] - Denotes number of scenes in the file.
 * |         - Invalid in dialogue and names.
+* #         - Placed at the beginning of a line to indicated a comment.
 ### Line format
 * [name]|[text to be said]
-* Matt|This is what a line of dialogue looks like  
+* Matt|This is what a line of dialogue looks like.
 
 
 ## Asset Credits

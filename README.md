@@ -17,9 +17,10 @@
 * BEGIN     - Denotes the beginning of a scene
 * END       - Denotes the end of a scene
 * SCENE [x] - Denotes number of scenes in the file
+* |         - Invalid in dialogue and names.
 ### Line format
-* [name]:[text to be said]
-* Matt:This is what a line of dialogue looks like  
+* [name]|[text to be said]
+* Matt|This is what a line of dialogue looks like  
 
 
 ## Asset Credits

@@ -6,8 +6,8 @@
 * Blender (For models)
 
 ## Notes
-* If models aren't appearing, make sure Blender is installed and reimport \_models
-* Slumscript syntax docs are in SlumScriptSyntax.md
+* If models aren't appearing, make sure Blender is installed and reimport /_models
+* Slumscript syntax doc is SlumScriptSyntax.md. Example in Assets/_script/test.slum
 
 ## Asset Credits
 * Low Poly House Models by [@QuaterniusDev](https://twitter.com/quaternius)

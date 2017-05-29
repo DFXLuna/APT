@@ -31,7 +31,7 @@ namespace NarrativeReader{
 			currentScene = 0;
 		}
 
-		public NarrativeEvent readNextScene(){
+		public KeyValuePair<condition, narrative> readNextScene(){
 			if(file.Peek() == -1){ 
 				throw new System.IO.IOException("Slumscript syntax error in scene count");
 			}
@@ -40,7 +40,7 @@ namespace NarrativeReader{
 			if(String.Compare(curr, "BEGIN") != 0){
 				throw(new System.IO.IOException("Slumscript syntax error in scene " + currentScene));	
 			}
-			// Placeholder for condition reading
+			condition c = parseConditition();
 			// Read lines until end
 			List<string> lines = new List<string>();
 			curr = file.ReadLine();
@@ -49,14 +49,15 @@ namespace NarrativeReader{
 				lines.Add(curr);
 				curr = file.ReadLine();
 			}
-			return parseScene(lines);			
+
+			return new KeyValuePair<condition, narrative>(c, parseScene(lines));			
 		}
 
 		public int getCurrentScene(){ return currentScene; }
 
 		public int getNumScenes(){ return numScenes; }
 
-		private NarrativeEvent parseScene(List<string> lines){
+		private narrative parseScene(List<string> lines){
 			List<string> names = new List<string>();
 			List<string> dialogue = new List<string>();
 			string[] curr;
@@ -70,8 +71,33 @@ namespace NarrativeReader{
 				}
 				names.Add(String.Copy(curr[0]));
 				dialogue.Add(String.Copy(curr[1]));
-			} 
-			return new NarrativeEvent(names, dialogue);
+			}
+			NarrativeEvent ret = new NarrativeEvent(names, dialogue); 
+			return ret.playEvent;
+		}
+
+		private condition parseConditition(){
+			// syntax is CONDITION variable predicate comparisonvalue
+			string[] parse = file.ReadLine().Split();
+			if(parse.Length != 4 || 
+			(String.Compare(parse[0].Trim(), "CONDITION") != 0)){
+				throw new System.IO.IOException("Slumscript syntax error in scene " 
+				+ currentScene + " condition");
+			}
+			int comparisonvalue;
+			if(!Int32.TryParse(parse[3], out comparisonvalue)){
+				throw new System.IO.IOException("Slumscript syntax error in scene "
+				+ currentScene + "comparision value");
+			}
+			// Predicate application
+			if(String.Compare(parse[2].Trim(), ">=") != 0){}
+			// foreach(var s in parse){ Debug.Log(s); }
+			return createGreaterThan(parse[1], comparisonvalue);
+
+		}
+
+		private condition createGreaterThan(string variable, int value){
+			return (() => true);
 		}
 		
 	}

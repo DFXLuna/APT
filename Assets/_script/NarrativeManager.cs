@@ -14,14 +14,16 @@ public class NarrativeManager : MonoBehaviour {
 		narratives = new Dictionary<condition, narrative>();
 		reader = new Reader("Assets/_script/test.slum");
 		// FOR TESTING
-		NarrativeEvent test = reader.readNextScene();
-		while(!test.isEnd()){
-			Debug.Log(test.nextLine());
-		}
-		test = reader.readNextScene();
-		while(!test.isEnd()){
-			Debug.Log(test.nextLine());
-		}
+		// NarrativeEvent test = reader.readNextScene();
+		// while(!test.isEnd()){
+		// 	Debug.Log(test.nextLine());
+		// }
+		// test = reader.readNextScene();
+		// while(!test.isEnd()){
+		// 	Debug.Log(test.nextLine());
+		// }
+		KeyValuePair<condition, narrative> test = reader.readNextScene();
+		test.Value();
 	}
 	
 	void Update () {

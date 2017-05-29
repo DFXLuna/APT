@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
+
 namespace NarrativeTypes{
 	// Condition to trigger associated narrative
 	public delegate bool condition();
@@ -33,6 +35,11 @@ namespace NarrativeTypes{
 		public bool isEnd(){
 			if(currentLine >= lines.Count){ return true; }
 			return false;
+		}
+
+		// Bandaid
+		public void playEvent(){
+			Debug.Log("Event played");
 		}
 	}
 }

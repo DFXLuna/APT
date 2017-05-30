@@ -13,6 +13,8 @@ public class HomeManager : MonoBehaviour {
 	private home currentHome;
 	// Maps a home enum to a transform offset
 	private Dictionary<home, Vector3> homeOffsets;
+	// Maps names to tenant objects
+	private Dictionary<string, Tenant> tenants;
 
 	void Start(){
 		// Home Array
@@ -24,6 +26,7 @@ public class HomeManager : MonoBehaviour {
 		// Offsets
 		homeOffsets = new Dictionary<home, Vector3>();
 		populateOffsets();
+
 	}
 	void Update(){}
 	
@@ -84,8 +87,10 @@ public class HomeManager : MonoBehaviour {
 	}
 
 	public bool registerTenant(string tenantName, int cash, GameObject home){
+		// Register tenant with Home object, economy manger and tenantmanger
 		if(home.GetComponent<Tenant>().RegisterTenant(tenantName, cash)){
 			GetComponent<EconomyManager>().EnqueueCash(tenantName, cash);
+			GetComponent<TenantManager>().registerTenant(tenantName, home.GetComponent<Tenant>());
 			return true;
 		}
 		return false;

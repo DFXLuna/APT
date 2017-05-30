@@ -7,6 +7,7 @@ public class Tenant : MonoBehaviour {
 	private bool _isOccupied;
 	private string _tenantName;
 	private int _cash;
+	private int _happiness;
 
 	// Use this for initialization
 	void Start () {
@@ -43,6 +44,10 @@ public class Tenant : MonoBehaviour {
 
 	public int cash(){
 		return _cash;
+	}
+
+	public int happiness(){
+		return _happiness;
 	}
 
 

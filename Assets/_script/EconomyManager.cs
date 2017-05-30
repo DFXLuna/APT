@@ -40,6 +40,10 @@ public class EconomyManager : MonoBehaviour {
 		return cashUpdateQueue.Remove(tenentName);
 	}
 
+	public int getCash(){
+		return currentCash;
+	}
+
 	void OnGUI(){
 		string text = currentCash.ToString();
 		GUI.Box(new Rect(0, 27, 100, 25), text);

@@ -11,8 +11,10 @@ namespace NarrativeReader{
 		private int numScenes;
 		private int currentScene;
 		private List<NarrativeEvent> scenes;
+		// Probably bad design but these need to be able to communicate
+		private NarrativeManager manager;
 		
-		public Reader(string fileLocation){
+		public Reader(string fileLocation, NarrativeManager man){
 			try{
 				file = new System.IO.StreamReader(fileLocation);
 			}
@@ -29,6 +31,7 @@ namespace NarrativeReader{
 			}
 			numScenes = parseScenes;
 			currentScene = 0;
+			manager = man;
 		}
 
 		public KeyValuePair<condition, narrative> readNextScene(){
@@ -90,14 +93,15 @@ namespace NarrativeReader{
 				+ currentScene + "comparision value");
 			}
 			// Predicate application
-			if(String.Compare(parse[2].Trim(), ">=") != 0){}
-			// foreach(var s in parse){ Debug.Log(s); }
-			return createGreaterThan(parse[1], comparisonvalue);
-
+			if(String.Compare(parse[2], ">=") == 0){
+				return createGreaterThan(parse[1], comparisonvalue);
+			}
+			throw new System.Exception("Invalid predicate: " + parse[2]);
 		}
 
 		private condition createGreaterThan(string variable, int value){
-			return (() => true);
+			int compare = manager.getVariable(variable);
+			return (() => compare >= value);
 		}
 		
 	}

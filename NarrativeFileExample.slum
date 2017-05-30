@@ -1,6 +1,10 @@
-SCENE 1
+SCENE 2
 BEGIN
+CONDITION Matt >= 10
 Matt|This is an example Narrative file
-# This is a comment and will be ignored by the reader.
 Matt|Each line of dialogue is on it's own separate line. Additionally, each file line is considered one line of dialogue.
+END
+BEGIN
+CONDITION cash >= 20
+Matt|This is the second narrative in the file.
 END

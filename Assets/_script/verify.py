@@ -4,12 +4,20 @@
 import sys
 from os import linesep
 predicates = ['>=']
+keywords = ['SCENE', 'BEGIN', 'END', 'CONDITION']
 
 def main():
-    if len(sys.argv) != 2 or len(sys.argv) != 3:
-        print('Usage: verify [-r] path\to\slumscript.slum')
-
-    with open(sys.argv[1]) as f:
+    if len(sys.argv) != 2 and len(sys.argv) != 3:
+        print('Usage: python verify.py [-r] path\\to\slumscript.slum')
+        sys.exit(99)
+    
+    toPrint = False
+    if(len(sys.argv) == 3 and sys.argv[1] == '-r'): 
+        toPrint = True
+    elif(len(sys.argv) == 3):
+        print('Usage: python verify.py [-r] path\\to\slumscript.slum')
+    
+    with open(sys.argv[len(sys.argv) - 1]) as f:
         beginstack = []
         numScenes = 0
         scenesplit = f.readline().strip().split(' ')
@@ -76,9 +84,22 @@ def main():
             print('Found: ' + str(numScenes))
             sys.exit(7)
         print('No syntax errors')
+        
         # Run scene
-        if(len(sys.argv) == 3 and argv[2] = '-r'):
-            
+        if(toPrint):
+            sceneNum = 1
+            with open(sys.argv[len(sys.argv) - 1])as f:
+               # read SCENE
+               f.readline()
+               for line in f:
+                   parse = line.strip().split('|')
+                   if len(parse) == 2 and not parse[0] in keywords:
+                       print(parse[0] + ": " + parse[1])
+                   elif parse[0] == "BEGIN":
+                       print("Scene " + str(sceneNum) + "/" + str(correctNumScenes))
+                       sceneNum += 1
+                   
+
 
 if __name__ == "__main__":
     main()

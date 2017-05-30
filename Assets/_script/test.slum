@@ -4,6 +4,7 @@ CONDITION vara >= 10
 Matt|Hello World!
 Matt|Hello World!2
 END
+
 BEGIN
 CONDITION varb >= 2
 Matt|testing 2 scenes

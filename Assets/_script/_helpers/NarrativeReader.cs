@@ -40,6 +40,9 @@ namespace NarrativeReader{
 			}
 			string curr = file.ReadLine();
 			curr.Trim();
+			while(String.Compare(curr, "") == 0){
+				curr = file.ReadLine();
+			}
 			if(String.Compare(curr, "BEGIN") != 0){
 				throw(new System.IO.IOException("Slumscript syntax error in scene " + currentScene));	
 			}

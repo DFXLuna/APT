@@ -46,8 +46,10 @@ public class NarrativeManager : MonoBehaviour {
 		}
 		else{
 			Tenant t;
-			GetComponent<TenantManager>().tryGetTenant(name, out t);
-			return t.happiness();
+			if(GetComponent<TenantManager>().tryGetTenant(name, out t)){
+				return t.happiness();
+			}
 		}
+		return 0;
 	}
 }

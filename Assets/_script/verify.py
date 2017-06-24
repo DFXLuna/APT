@@ -60,7 +60,7 @@ def main():
                     sys.exit(6)
                 else:
                     foundCondition = False
-            else :
+            else:
                 if line.strip() != '':
                     if not '|' in line:
                         print('Syntax error in line ' + str(linenum))

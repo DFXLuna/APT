@@ -7,7 +7,7 @@ public class HomeManager : MonoBehaviour {
 	public GameObject HomeA;
 	public GameObject HomeB;
 	// Indices match Grid array in GridManager
-	private GameObject[] homes;
+	public GameObject[] homes;
 	private enum home{ A, B };
 	private int numHomeTypes;
 	private home currentHome;
@@ -39,10 +39,8 @@ public class HomeManager : MonoBehaviour {
 			GameObject toAdd = Instantiate(
 				getCurrentHomeModel(), pos, getCurrentHomeModel().transform.rotation);
 			toAdd.transform.SetParent(GridSpace.transform);
-			if(isVacantLot(GridSpace)){
-				int i = getIndex(GridSpace);
-				homes[i] = toAdd;
-			}
+			int i = getIndex(GridSpace);
+			homes[i] = toAdd;
 		}
 	}
 

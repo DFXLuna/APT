@@ -17,11 +17,5 @@ public class PersistanceManager : MonoBehaviour {
 	}
 
 	public void saveHouses(){
-		homes = new GameObject[6];
-		int i = 0;
-		GameObject toSave = GameObject.FindWithTag("World");
-		foreach(var h in toSave.GetComponent<HomeManager>().homes){
-			homes[i] = h;
-		}
 	}
 }

@@ -66,24 +66,6 @@ public class InputManager : MonoBehaviour {
 				}
 			}
 		}
-		// Destory Mode ////////////////////////////////////////////////////
-		else if(currentContext == context.destroy){
-			// Destroy house
-			if(Input.GetMouseButtonDown(0)){
-				Ray mRay = 
-					c.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-				RaycastHit info;
-				if(Physics.Raycast(mRay, out info, 100)){
-					Transform child;
-					if(info.collider.gameObject.FindChildwithTag("Home", out child)){
-						if(GetComponent<HomeManager>().DestroyHome(info.collider.gameObject) &&
-						isCameraFocused()){
-							unfocus();
-						}
-					}
-				}
-			}
-		}
 		// Tenant Mode /////////////////////////////////////////////////////
 		// For testing
 		else if(currentContext == context.tenant){
@@ -95,7 +77,8 @@ public class InputManager : MonoBehaviour {
 				if(Physics.Raycast(mRay, out info, 100)){
 					Transform child;
 					if(info.collider.gameObject.FindChildwithTag("Home", out child)){
-						   if(!GetComponent<HomeManager>().registerTenant("Test name", 99, child.gameObject)){
+						   if(!GetComponent<HomeManager>().registerTenant("Test name", 99, 
+						   	   GetComponent<HomeManager>().getHomeFromGameObject(child.gameObject))){
 							Debug.Log("Can't create Tenant");
 						}
 					}
@@ -103,6 +86,25 @@ public class InputManager : MonoBehaviour {
 			}
 
 		}
+		// Deprecated for now
+		// // Destory Mode ////////////////////////////////////////////////////
+		// else if(currentContext == context.destroy){
+		// 	// Destroy house
+		// 	if(Input.GetMouseButtonDown(0)){
+		// 		Ray mRay = 
+		// 			c.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+		// 		RaycastHit info;
+		// 		if(Physics.Raycast(mRay, out info, 100)){
+		// 			Transform child;
+		// 			if(info.collider.gameObject.FindChildwithTag("Home", out child)){
+		// 				if(GetComponent<HomeManager>().DestroyHome(info.collider.gameObject) &&
+		// 				isCameraFocused()){
+		// 					unfocus();
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
 		// Focused Mode ////////////////////////////////////////////////////
 		else if(currentContext == context.focused){
 

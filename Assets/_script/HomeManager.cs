@@ -2,31 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HomeType;
 
 public class HomeManager : MonoBehaviour {
-	public GameObject HomeA;
-	public GameObject HomeB;
 	// Indices match Grid array in GridManager
-	public GameObject[] homes;
-	private enum home{ A, B };
-	private int numHomeTypes;
-	private home currentHome;
-	// Maps a home enum to a transform offset
-	private Dictionary<home, Vector3> homeOffsets;
+	public Home[] homes;
 	// Maps names to tenant objects
 	private Dictionary<string, Tenant> tenants;
+	private HomeFactory factory;
 
 	void Start(){
 		// Home Array
 		int numSpaces = GetComponent<GridManager>().numSpaces;
-		homes = new GameObject[numSpaces];
-		// Home Selection
-		currentHome = home.A;
-		numHomeTypes = Enum.GetValues(typeof(home)).Length;
-		// Offsets
-		homeOffsets = new Dictionary<home, Vector3>();
-		populateOffsets();
-
+		homes = new Home[numSpaces];
+		factory = HomeFactory.instance();
 	}
 	void Update(){}
 	
@@ -34,62 +23,36 @@ public class HomeManager : MonoBehaviour {
 		// TODO 
 		// animation
 		if(isVacantLot(GridSpace)){
-			Vector3 offset = new Vector3(0, .5f, 0) + getCurrentOffset();
-			Vector3 pos = GridSpace.transform.position + offset;
-			GameObject toAdd = Instantiate(
-				getCurrentHomeModel(), pos, getCurrentHomeModel().transform.rotation);
-			toAdd.transform.SetParent(GridSpace.transform);
+			Home toAdd = factory.makeHome(GridSpace);
 			int i = getIndex(GridSpace);
 			homes[i] = toAdd;
 		}
 	}
 
-	public GameObject getCurrentHomeModel(){
-		switch(currentHome){
-			case home.A:
-				return HomeA;
-			case home.B:
-				return HomeB;
-			default:
-				return HomeA;
-		}
+	private GameObject getCurrentHomeModel(){
+		return factory.getCurrentHomeModel();
 	}
 
-	public bool DestroyHome(GameObject GridSpace){
-		if(!isVacantLot(GridSpace)){
-			int i = getIndex(GridSpace);
-			DequeueCash(i);
-			DequeueCash(i + numHomeTypes);
-			Destroy(homes[i]);
-			homes[i] = null;
-			return true;
-		}
-		return false;
+	private HomeEnum getCurrentHome(){
+		return factory.getCurrentHome();
 	}
 
 	public void nextHome(){
-		if((int)currentHome == (numHomeTypes - 1)){
-			currentHome = home.A;
-		}
-		else{
-			currentHome++;
-		}
+		factory.nextHome();
 	}
 	public void prevHome(){
-		if((int)currentHome == 0){
-			currentHome = (home)(numHomeTypes - 1);
-		}
-		else{
-			currentHome--;
-		}
+		factory.prevHome();
 	}
 
-	public bool registerTenant(string tenantName, int cash, GameObject home){
+	public bool registerTenant(string tenantName, int cash, Home home){
 		// Register tenant with Home object, economy manger and tenantmanger
-		if(home.GetComponent<Tenant>().RegisterTenant(tenantName, cash)){
+		if(home.registerTenant(tenantName, cash)){
 			GetComponent<EconomyManager>().EnqueueCash(tenantName, cash);
-			GetComponent<TenantManager>().registerTenant(tenantName, home.GetComponent<Tenant>());
-			return true;
+			Tenant t;
+			if(home.tryGetTenant(out t)){
+				GetComponent<TenantManager>().registerTenant(tenantName, t);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -100,16 +63,12 @@ public class HomeManager : MonoBehaviour {
 		else { return false; }
 	}
 
-	private bool isVacantHome(GameObject home){
-		return !(home.GetComponent<Tenant>().isOccupied());
-	}
-	
-	private Vector3 getCurrentOffset(){
-		return homeOffsets[currentHome];
-	}
-	private void populateOffsets(){
-		homeOffsets[home.A] = new Vector3(0, .4f, 0);
-		homeOffsets[home.B] = new Vector3(1.05f, .52f, .4f);
+	private bool isVacantHome(Home home){
+		Tenant t;
+		if(home.tryGetTenant(out t)){
+			return false;
+		}
+		return true;
 	}
 
 	// Helper methods
@@ -125,14 +84,38 @@ public class HomeManager : MonoBehaviour {
 		GetComponent<EconomyManager>().DequeueCash(ID.ToString());
 	}
 
+	
+	public Home getHomeFromGameObject(GameObject obj){
+		foreach(var h in homes){
+			if(h.compareWithGameObject(obj)){
+				return h;
+			}
+		}
+		throw new Exception("Error in getHomeFromGameObject " + obj);
+	}
+
 	// Debug Gui
 	void OnGUI(){
 		// Home indicator
 		if(GetComponent<InputManager>().getCurrentContext() == InputManager.context.build){
 			string text = "";
-			if(currentHome == home.A){ text = "Home: A"; }
-			else if(currentHome == home.B){ text = "Home: B"; }
+			if(getCurrentHome() == HomeEnum.A){ text = "Home: A"; }
+			else if(getCurrentHome() == HomeEnum.B){ text = "Home: B"; }
 			GUI.Box(new Rect(0, 54, 100, 25), text);
 		}
 	}
 }
+
+
+// Deprecated but possibly needed in the future
+// public bool DestroyHome(GameObject GridSpace){
+// 	if(!isVacantLot(GridSpace)){
+// 		int i = getIndex(GridSpace);
+// 		DequeueCash(i);
+// 		DequeueCash(i + numHomeTypes);
+// 		Destroy(homes[i]);
+// 		homes[i] = null;
+// 		return true;
+// 	}
+// 	return false;
+// }

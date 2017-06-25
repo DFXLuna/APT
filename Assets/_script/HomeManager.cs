@@ -84,6 +84,11 @@ public class HomeManager : MonoBehaviour {
 		GetComponent<EconomyManager>().DequeueCash(ID.ToString());
 	}
 
+	public void saveHomes(){
+		GetComponent<Persistance>().PersistanceManager.
+			GetComponent<PersistanceManager>().saveHomes(homes);
+	}
+
 	
 	public Home getHomeFromGameObject(GameObject obj){
 		foreach(var h in homes){

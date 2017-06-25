@@ -30,7 +30,18 @@ namespace HomeType{
 			return false;
 		}
 
-		//Checks if gameobject == _home
+		// public Home copy(){
+		// 	GameObject g = GameObject.Instantiate(_home);
+		// 	Home ret = new Home(g);
+		// 	return ret;
+		// }
+
+		public void Save(){
+			Object.DontDestroyOnLoad(_home);
+			_home.SetActive(false);
+		}
+
+		//Used in collision detection for inputmanager
 		public bool compareWithGameObject(GameObject check){
 			return(_home == check);
 		}

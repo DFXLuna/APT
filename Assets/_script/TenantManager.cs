@@ -17,9 +17,15 @@ public class TenantManager : MonoBehaviour {
 		//throw new System.Exception("Tenant " + name + " does not exist");
 		return false;
 	}
+	
 
 	public bool registerTenant(string name, Tenant t){
-		return false;
+		Tenant temp;
+		if(tenants.TryGetValue(name, out temp)){
+			return false;
+		}
+		tenants[name] = t;
+		return true;
 	}
 	
 }

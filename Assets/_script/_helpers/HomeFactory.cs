@@ -47,7 +47,9 @@ public class HomeFactory{
         GameObject ret = GameObject.Instantiate(
             getCurrentHomeModel(), pos, getCurrentHomeModel().transform.rotation);
         ret.transform.SetParent(GridSpace.transform);
-        return new Home(ret);
+		
+		Home h = new Home(ret, GridSpace.name);
+        return h;
     }
 
     // Helper Methods
@@ -85,11 +87,9 @@ public class HomeFactory{
 	public void LoadModels(){
 		var models = Enum.GetValues(typeof(HomeEnum));
 		foreach(HomeEnum m in models){
-			Debug.Log("Home" + m.ToString());
 			HomeModels[m] = Resources.Load<GameObject>("Home" + m.ToString()); 
 		}
 		foreach(HomeEnum m in models){
-			Debug.Log(HomeModels[m]);
 		}
 		
 	}

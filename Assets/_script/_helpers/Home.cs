@@ -7,10 +7,12 @@ namespace HomeType{
 	public enum HomeEnum{ A, B };
 	// Wrapper for gameobjects representing homes
 	public class Home{
-		GameObject _home;
+		private GameObject _home;
+		private string _gridspace;
 
-		public Home(GameObject home){
+		public Home(GameObject home, string gridspace){
 			_home = home;
+			_gridspace = gridspace;
 		}
 
 		public bool registerTenant(string tenantName, int cash){
@@ -30,15 +32,23 @@ namespace HomeType{
 			return false;
 		}
 
-		// public Home copy(){
-		// 	GameObject g = GameObject.Instantiate(_home);
-		// 	Home ret = new Home(g);
-		// 	return ret;
-		// }
-
 		public void Save(){
+			// Have to remove parent before DontDestroyOnLoad
+			_home.transform.parent = null;
 			Object.DontDestroyOnLoad(_home);
 			_home.SetActive(false);
+		}
+
+		public void Load(){
+			_home.SetActive(true);
+		}
+
+		public string getGridSpace(){
+			return _gridspace;
+		}
+
+		public void setParentGridspace(GameObject gridspace){
+			_home.transform.parent = gridspace.transform;
 		}
 
 		//Used in collision detection for inputmanager

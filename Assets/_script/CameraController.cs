@@ -64,8 +64,6 @@ public class CameraController : MonoBehaviour {
 			if(SceneManager.GetActiveScene().name == "main"){
 				GameObject w = GameObject.FindWithTag("World");
 				w.GetComponent<HomeManager>().saveHomes();
-				Debug.Log("Save");
-				Debug.Log(p.GetComponent<PersistanceManager>().homes.Length);
 				SceneManager.LoadScene("dialogue");
 			}
 			else{

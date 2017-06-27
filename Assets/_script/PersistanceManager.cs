@@ -6,15 +6,16 @@ using HomeType;
 
 public class PersistanceManager : MonoBehaviour {
 	public static PersistanceManager p;
-	private Home[] _homes;
-	public bool _isSaved;
+	private static Home[] _homes;
+	public static bool _isSaved;
+	public static int test;
 
 	void Awake(){
 		if(p == null){
 			DontDestroyOnLoad(gameObject);
 			p = this;
 			_isSaved = false;
-			Debug.Log("Setting isSaved");
+			_homes = new Home[6];
 		}
 		else if(p != this){
 			Destroy(gameObject);
@@ -22,29 +23,33 @@ public class PersistanceManager : MonoBehaviour {
 	}
 
 	public void saveHomes(Home[] homes){
-		foreach(var h in homes){
-			if(h != null){
-				h.Save();
+		for(int i = 0; i <homes.Length; i++){
+			if(homes[i] != null){
+				homes[i].Save();
 			}
+			_homes[i] = homes[i];
 		}
-		// Hold reference to give back after loading
-		_homes = homes;
 		_isSaved = true;
-		Debug.Log("Saved");
 	}
 
 	public bool tryLoadHomes(out Home[] ret){
-		ret = null;
+		ret = new Home[_homes.Length];
 		if(_isSaved){
-			ret = _homes;
+			for(int i = 0; i < _homes.Length; i++){
+				if(_homes[i] != null){
+					Debug.Log(i + " is not null");
+					_homes[i].Load();
+				}
+				ret[i] = _homes[i];
+			}
 			_isSaved = false;
+			//_homes = null;
 			return true;
-			_homes = null;
 		}
 		return false;
 	}
 
 	public bool isSaved(){
-		return _homes != null;
+		return _isSaved;
 	}
 }

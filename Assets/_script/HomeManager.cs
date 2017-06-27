@@ -13,16 +13,11 @@ public class HomeManager : MonoBehaviour {
 
 	void Start(){
 		// Home Array
-		Debug.Log(GetComponent<Persistance>().PersistanceManager.
-			GetComponent<PersistanceManager>().isSaved());
 		int numSpaces = GetComponent<GridManager>().numSpaces;
-		if(GetComponent<Persistance>().PersistanceManager.
-			GetComponent<PersistanceManager>().isSaved()){
-				Debug.Log("Loading Homes");
+		if(GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().isSaved()){
 				loadHomes();
-			}
-		else{
-			Debug.Log("Creating Homes");	
+		}
+		else{	
 			homes = new Home[numSpaces];
 		}
 		factory = HomeFactory.instance();
@@ -94,14 +89,14 @@ public class HomeManager : MonoBehaviour {
 		GetComponent<EconomyManager>().DequeueCash(ID.ToString());
 	}
 
-	public void saveHomes(){
-		GetComponent<Persistance>().PersistanceManager.
+	public void saveHomes(){	
+		GetComponent<Persistance>().persistanceManager.
 			GetComponent<PersistanceManager>().saveHomes(homes);
 	}
 
 	private void loadHomes(){
 		Home[] h = null;
-		if(GetComponent<Persistance>().PersistanceManager.
+		if(GetComponent<Persistance>().persistanceManager.
 			GetComponent<PersistanceManager>().tryLoadHomes(out h)){
 				homes = h;
 			}

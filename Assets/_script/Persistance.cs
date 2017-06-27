@@ -3,5 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Persistance : MonoBehaviour {
-	public GameObject PersistanceManager;
+	public PersistanceManager persistanceManager;
+	// Proxy for PersitanceManager
+	public void registerWithWorldManager(){
+		persistanceManager = PersistanceManager.p;
+	}
+
+	public void Start(){
+		registerWithWorldManager();
+	}
 }

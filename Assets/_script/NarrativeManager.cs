@@ -14,7 +14,6 @@ public class NarrativeManager : MonoBehaviour {
 		narratives = new Dictionary<condition, narrative>();
 		reader = new Reader("Assets/_script/test.slum", this);
 		KeyValuePair<condition, narrative> test = reader.readNextScene();
-		test.Value();
 	}
 	
 	void Update () {

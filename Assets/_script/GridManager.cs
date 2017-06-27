@@ -113,4 +113,8 @@ public class GridManager : MonoBehaviour {
 			return -1;
 		}		
 	}
+
+	public GameObject getGridSpace(string index){
+		return GridSpaces[getIndex(index)];
+	}
 }

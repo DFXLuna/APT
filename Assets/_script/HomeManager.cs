@@ -14,7 +14,12 @@ public class HomeManager : MonoBehaviour {
 	void Start(){
 		// Home Array
 		int numSpaces = GetComponent<GridManager>().numSpaces;
-		homes = new Home[numSpaces];
+		if(GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().isSaved()){
+				loadHomes();
+		}
+		else{	
+			homes = new Home[numSpaces];
+		}
 		factory = HomeFactory.instance();
 	}
 	void Update(){}
@@ -82,6 +87,30 @@ public class HomeManager : MonoBehaviour {
 
 	private void DequeueCash(int ID){
 		GetComponent<EconomyManager>().DequeueCash(ID.ToString());
+	}
+
+	public void saveHomes(){	
+		GetComponent<Persistance>().persistanceManager.
+			GetComponent<PersistanceManager>().saveHomes(homes);
+	}
+
+	private void loadHomes(){
+		Home[] h = null;
+		if(GetComponent<Persistance>().persistanceManager.
+			GetComponent<PersistanceManager>().tryLoadHomes(out h)){
+				homes = h;
+			}
+		else{
+			throw new Exception("Unable to load homes");
+		}
+		// Set gridspace parents
+		GameObject gs;
+		foreach(Home home in homes){
+			if(home != null){
+				gs = GetComponent<GridManager>().getGridSpace(home.getGridSpace());
+				home.setParentGridspace(gs);
+			}
+		}
 	}
 
 	

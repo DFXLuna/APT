@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using HomeType;
 
 public class CameraController : MonoBehaviour {
 	public float ZoomTarget = 3f;
@@ -13,6 +14,8 @@ public class CameraController : MonoBehaviour {
 	private float targetSize;
 	private float zoomSmoothDampV;
 	private bool focused;
+	// holds world reference for debug gui
+	private GameObject world;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +24,7 @@ public class CameraController : MonoBehaviour {
 		startSize = GetComponent<Camera>().orthographicSize;
 		targetSize = startSize;
 		offset = startPos - GetWorldPosAtViewportPoint(0.5f, 0.5f);
+		world = GameObject.FindWithTag("World");
 	}
 
 	void FixedUpdate () {
@@ -59,18 +63,45 @@ public class CameraController : MonoBehaviour {
         return worldRay.GetPoint(distanceToGround);
     }
 
+	private HomeEnum getCurrentHome(){
+		return world.GetComponent<HomeManager>().getCurrentHome();
+	}
+
 	void OnGUI(){
+		// Giant mess of debug ui
+		if(SceneManager.GetActiveScene().name == "main"){
+			InputManager.context currentContext = world.GetComponent<InputManager>().getCurrentContext();
+			// Home indicator
+			if(currentContext == InputManager.context.build){
+				string homeText = "";
+				if(getCurrentHome() == HomeEnum.A){ homeText = "Home: A"; }
+				else if(getCurrentHome() == HomeEnum.B){ homeText = "Home: B"; }
+				GUI.Box(new Rect(0, 54, 100, 25), homeText);
+			}
+			// Context indicator
+			string contextText = "";
+			if(currentContext == InputManager.context.build){ contextText = "Build"; }
+			else if(currentContext == InputManager.context.select) { contextText = "Select";  }
+			else if(currentContext == InputManager.context.destroy){ contextText = "Destroy"; }
+			else if(currentContext == InputManager.context.tenant) { contextText = "Tenant";  }
+			else if(currentContext == InputManager.context.focused){ contextText = "Focused"; }
+			GUI.Box(new Rect(0, 0, 100, 25), contextText);
+			// Cash Indicator
+			string cashText = world.GetComponent<EconomyManager>().getCash().ToString();
+			GUI.Box(new Rect(0, 27, 100, 25), cashText);
+		}
+		// Scene Switcher
 		if(GUI.Button(new Rect(Screen.width - 102 ,2, 100, 100), "Load Scene")){
 			if(SceneManager.GetActiveScene().name == "main"){
-				GameObject w = GameObject.FindWithTag("World");
-				w.GetComponent<HomeManager>().saveHomes();
+				world.GetComponent<HomeManager>().saveHomes();
+				world.GetComponent<EconomyManager>().saveCash();
 				SceneManager.LoadScene("dialogue");
 			}
 			else{
 				SceneManager.LoadScene("main");
 			}
 		}
-		string text = "Scene" + SceneManager.GetActiveScene().name;
-		GUI.Label(new Rect(Screen.width - 102, 104, 100, 100), text);
+		string sceneText = "Scene" + SceneManager.GetActiveScene().name;
+		GUI.Label(new Rect(Screen.width - 102, 104, 100, 100), sceneText);
 	}
 }

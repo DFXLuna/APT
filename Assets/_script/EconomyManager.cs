@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EconomyManager : MonoBehaviour {
 	public int startingCash = 400;
+	public float updateInterval = 5;
 	private int currentCash;
 	// Maps Tenent ID to cash amount
 	private Dictionary<string, int> cashUpdateQueue;
@@ -11,7 +12,12 @@ public class EconomyManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		currentCash = startingCash;
+		if(GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().isSaved()){
+			loadCash();
+		}
+		else{
+			currentCash = startingCash;
+		}
 		cashUpdateQueue = new Dictionary<string, int>();
 		timeOffset = Time.time;
 		
@@ -20,7 +26,7 @@ public class EconomyManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// Temporary 
-		if(Time.time - timeOffset >= 5){
+		if(Time.time - timeOffset >= updateInterval){
 			timeOffset = Time.time;
 			updateCash();
 		}
@@ -44,9 +50,15 @@ public class EconomyManager : MonoBehaviour {
 		return currentCash;
 	}
 
+	public void saveCash(){
+		GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().saveCash(currentCash);
+	}
+
+	private void loadCash(){
+		currentCash = GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().loadCash();
+	}
+
 	void OnGUI(){
-		string text = currentCash.ToString();
-		GUI.Box(new Rect(0, 27, 100, 25), text);
 
 	}
 }

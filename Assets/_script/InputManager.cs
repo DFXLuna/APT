@@ -131,14 +131,7 @@ public class InputManager : MonoBehaviour {
 	}
 
 	void OnGUI(){
-		// Context indicator
-		string text = "";
-		if(currentContext == context.build){ text = "Build"; }
-		else if(currentContext == context.select){ text = "Select";   }
-		else if(currentContext == context.destroy){ text = "Destroy"; }
-		else if(currentContext == context.tenant){ text = "Tenant";   }
-		else if(currentContext == context.focused){ text = "Focused"; }
-		GUI.Box(new Rect(0, 0, 100, 25), text);
+
 
 		if(isCameraFocused()){
 			// Display home stats/Tenant on focus
@@ -146,7 +139,6 @@ public class InputManager : MonoBehaviour {
 			Vector3 offset = c.GetComponent<Camera>().WorldToScreenPoint(b);
 			//Debug.Log(offset);
 			
-			//GUILayout.BeginArea(new Rect(Screen.width/2 - 100, Screen.height/2 - 50, 200, 100));
 			GUILayout.BeginArea(new Rect(offset.x + 100, Screen.height/2 - 50, 200, 100));
 			Tenant t = focusedHome.GetComponent<Tenant>();
 			GUILayout.Button("Name: " + t.TenantName());

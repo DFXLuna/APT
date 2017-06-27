@@ -7,8 +7,9 @@ using HomeType;
 public class PersistanceManager : MonoBehaviour {
 	public static PersistanceManager p;
 	private static Home[] _homes;
-	public static bool _isSaved;
-	public static int test;
+	private static bool _isSaved;
+	private static int _cash;
+
 
 	void Awake(){
 		if(p == null){
@@ -16,6 +17,7 @@ public class PersistanceManager : MonoBehaviour {
 			p = this;
 			_isSaved = false;
 			_homes = new Home[6];
+			_cash = 0;
 		}
 		else if(p != this){
 			Destroy(gameObject);
@@ -43,12 +45,19 @@ public class PersistanceManager : MonoBehaviour {
 				ret[i] = _homes[i];
 			}
 			_isSaved = false;
-			//_homes = null;
 			return true;
 		}
 		return false;
 	}
+	
+	public void saveCash(int cash){
+		_cash = cash;
+	}
 
+	public int loadCash(){
+		return _cash;
+	}
+	
 	public bool isSaved(){
 		return _isSaved;
 	}

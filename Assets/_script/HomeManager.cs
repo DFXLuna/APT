@@ -38,7 +38,7 @@ public class HomeManager : MonoBehaviour {
 		return factory.getCurrentHomeModel();
 	}
 
-	private HomeEnum getCurrentHome(){
+	public HomeEnum getCurrentHome(){
 		return factory.getCurrentHome();
 	}
 
@@ -123,28 +123,4 @@ public class HomeManager : MonoBehaviour {
 		throw new Exception("Error in getHomeFromGameObject " + obj);
 	}
 
-	// Debug Gui
-	void OnGUI(){
-		// Home indicator
-		if(GetComponent<InputManager>().getCurrentContext() == InputManager.context.build){
-			string text = "";
-			if(getCurrentHome() == HomeEnum.A){ text = "Home: A"; }
-			else if(getCurrentHome() == HomeEnum.B){ text = "Home: B"; }
-			GUI.Box(new Rect(0, 54, 100, 25), text);
-		}
-	}
 }
-
-
-// Deprecated but possibly needed in the future
-// public bool DestroyHome(GameObject GridSpace){
-// 	if(!isVacantLot(GridSpace)){
-// 		int i = getIndex(GridSpace);
-// 		DequeueCash(i);
-// 		DequeueCash(i + numHomeTypes);
-// 		Destroy(homes[i]);
-// 		homes[i] = null;
-// 		return true;
-// 	}
-// 	return false;
-// }

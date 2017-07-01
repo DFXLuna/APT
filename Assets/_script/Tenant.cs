@@ -19,6 +19,7 @@ public class Tenant : MonoBehaviour {
 			_isOccupied = true;
 			_tenantName = name;
 			_cash = cash;
+			_happiness = 0;
 			return true;
 		}
 		return false;

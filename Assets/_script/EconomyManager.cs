@@ -6,8 +6,7 @@ public class EconomyManager : MonoBehaviour {
 	public int startingCash = 400;
 	public float updateInterval = 5;
 	private int currentCash;
-	// Maps Tenent ID to cash amount
-	private Dictionary<string, int> cashUpdateQueue;
+	private int cashUpdateAmount;
 	private float timeOffset;
 
 	// Use this for initialization
@@ -17,8 +16,8 @@ public class EconomyManager : MonoBehaviour {
 		}
 		else{
 			currentCash = startingCash;
+			cashUpdateAmount = 0;
 		}
-		cashUpdateQueue = new Dictionary<string, int>();
 		timeOffset = Time.time;
 		
 	}
@@ -33,17 +32,16 @@ public class EconomyManager : MonoBehaviour {
 	}
 
 	private void updateCash(){
-		foreach(string t in cashUpdateQueue.Keys){
-			currentCash += cashUpdateQueue[t];
-		}
+		currentCash += cashUpdateAmount;
 	}
 
-	public void EnqueueCash(string tenentName, int cash){
-		cashUpdateQueue[tenentName] = cash;
+	public void EnqueueCash(int cash){
+	
+		cashUpdateAmount += cash;
 	}
 
-	public bool DequeueCash(string tenentName){
-		return cashUpdateQueue.Remove(tenentName);
+	public void DequeueCash(int cash){
+		cashUpdateAmount -= cash;
 	}
 
 	public int getCash(){
@@ -51,14 +49,22 @@ public class EconomyManager : MonoBehaviour {
 	}
 
 	public void saveCash(){
-		GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().saveCash(currentCash);
+		GetComponent<Persistance>().persistanceManager.
+			GetComponent<PersistanceManager>().saveCash(currentCash, cashUpdateAmount);
 	}
 
 	private void loadCash(){
-		currentCash = GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().loadCash();
+		int tempCash;
+		cashUpdateAmount = GetComponent<Persistance>().persistanceManager.
+			GetComponent<PersistanceManager>().loadCash(out tempCash);
+		currentCash = tempCash;
 	}
 
 	void OnGUI(){
+		if(GUI.Button(new Rect(250 ,2, 100, 100), "Get Cash Values")){
+			Debug.Log("Current Cash:" + currentCash);
+			Debug.Log("cashUpdateAmount: " + cashUpdateAmount);
+		}
 
 	}
 }

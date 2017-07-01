@@ -50,10 +50,11 @@ public class HomeManager : MonoBehaviour {
 	}
 
 	public bool registerTenant(string tenantName, int cash, Home home){
-		// Register tenant with Home object, economy manger and tenantmanger
+		// Store tenant details in Tenant component of home
 		if(home.registerTenant(tenantName, cash)){
-			GetComponent<EconomyManager>().EnqueueCash(tenantName, cash);
+			GetComponent<EconomyManager>().EnqueueCash(cash);
 			Tenant t;
+			// Register with tenant manager
 			if(home.tryGetTenant(out t)){
 				GetComponent<TenantManager>().registerTenant(tenantName, t);
 				return true;
@@ -81,12 +82,12 @@ public class HomeManager : MonoBehaviour {
 		return GetComponent<GridManager>().getIndex(GridSpace);
 	}
 
-	private void EnqueueCash(string tenantName, int cash){
-		GetComponent<EconomyManager>().EnqueueCash(tenantName, cash);
+	private void EnqueueCash(int cash){
+		GetComponent<EconomyManager>().EnqueueCash(cash);
 	}
 
-	private void DequeueCash(int ID){
-		GetComponent<EconomyManager>().DequeueCash(ID.ToString());
+	private void DequeueCash(int cash){
+		GetComponent<EconomyManager>().DequeueCash(cash);
 	}
 
 	public void saveHomes(){	

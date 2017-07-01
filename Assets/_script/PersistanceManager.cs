@@ -9,6 +9,7 @@ public class PersistanceManager : MonoBehaviour {
 	private static Home[] _homes;
 	private static bool _isSaved;
 	private static int _cash;
+	private static int _cashUpdateAmount;
 
 
 	void Awake(){
@@ -18,6 +19,7 @@ public class PersistanceManager : MonoBehaviour {
 			_isSaved = false;
 			_homes = new Home[6];
 			_cash = 0;
+			_cashUpdateAmount = 0;
 		}
 		else if(p != this){
 			Destroy(gameObject);
@@ -39,23 +41,27 @@ public class PersistanceManager : MonoBehaviour {
 		if(_isSaved){
 			for(int i = 0; i < _homes.Length; i++){
 				if(_homes[i] != null){
-					Debug.Log(i + " is not null");
 					_homes[i].Load();
 				}
 				ret[i] = _homes[i];
 			}
-			_isSaved = false;
+			// _isSaved = false;
 			return true;
 		}
 		return false;
 	}
 	
-	public void saveCash(int cash){
+	public void saveCash(int cash, int cashUpdateAmount){
 		_cash = cash;
+		_cashUpdateAmount = cashUpdateAmount;
+		_isSaved = true;
 	}
 
-	public int loadCash(){
-		return _cash;
+	public int loadCash(out int cash){
+		cash = _cash;
+		// HACK Fix this
+		_isSaved = false;
+		return _cashUpdateAmount;
 	}
 	
 	public bool isSaved(){

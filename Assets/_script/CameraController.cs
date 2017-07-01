@@ -82,7 +82,7 @@ public class CameraController : MonoBehaviour {
 			string contextText = "";
 			if(currentContext == InputManager.context.build){ contextText = "Build"; }
 			else if(currentContext == InputManager.context.select) { contextText = "Select";  }
-			else if(currentContext == InputManager.context.destroy){ contextText = "Destroy"; }
+			// else if(currentContext == InputManager.context.destroy){ contextText = "Destroy"; }
 			else if(currentContext == InputManager.context.tenant) { contextText = "Tenant";  }
 			else if(currentContext == InputManager.context.focused){ contextText = "Focused"; }
 			GUI.Box(new Rect(0, 0, 100, 25), contextText);

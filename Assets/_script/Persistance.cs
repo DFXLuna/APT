@@ -10,7 +10,7 @@ public class Persistance : MonoBehaviour {
 		registerWithWorldManager();
 	}
 
-	public void registerWithWorldManager(){
+	private void registerWithWorldManager(){
 		persistanceManager = PersistanceManager.p;
 	}
 }

@@ -13,7 +13,7 @@ public class NarrativeManager : MonoBehaviour {
 	void Start () {
 		narratives = new Dictionary<condition, narrative>();
 		reader = new Reader("Assets/_script/test.slum", this);
-		KeyValuePair<condition, narrative> test = reader.readNextScene();
+		KeyValuePair<condition, NarrativeEvent> test = reader.readNextScene();
 	}
 	
 	void Update () {

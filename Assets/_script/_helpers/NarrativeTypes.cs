@@ -5,9 +5,6 @@ namespace NarrativeTypes{
 	// Condition to trigger associated narrative
 	public delegate bool condition();
 	
-	// Trigger narrative event
-	public delegate void narrative();
-	
 	// Narrative Data
 	public struct NarrativeEvent {
 		List<string> lines;
@@ -40,6 +37,11 @@ namespace NarrativeTypes{
 		// Bandaid
 		public void playEvent(){
 			Debug.Log("Event played");
+		}
+
+		public void print(){
+			Debug.Log("Event line count:" + lines.Count);
+			Debug.Log("First line:" + lines[0]);
 		}
 	}
 }

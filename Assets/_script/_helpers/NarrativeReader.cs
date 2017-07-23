@@ -34,9 +34,10 @@ namespace NarrativeReader{
 			manager = man;
 		}
 
-		public KeyValuePair<condition, NarrativeEvent> readNextScene(){
+		public bool readNextScene(out KeyValuePair<condition, NarrativeEvent> e){
 			if(file.Peek() == -1){ 
-				throw new System.IO.IOException("Slumscript syntax error in scene count");
+				e = new KeyValuePair<condition, NarrativeEvent>();
+				return false;
 			}
 			string curr = file.ReadLine();
 			curr.Trim();
@@ -56,7 +57,8 @@ namespace NarrativeReader{
 				curr = file.ReadLine();
 			}
 
-			return new KeyValuePair<condition, NarrativeEvent>(c, parseScene(lines));			
+			e = new KeyValuePair<condition, NarrativeEvent>(c, parseScene(lines));
+			return true;			
 		}
 
 		public int getCurrentScene(){ return currentScene; }

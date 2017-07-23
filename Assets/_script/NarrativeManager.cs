@@ -7,35 +7,41 @@ using NarrativeReader;
 
 public class NarrativeManager : MonoBehaviour {
 	// Maps condition to associated narrative 
-	private Dictionary<condition, narrative> narratives;
+	private Dictionary<condition, NarrativeEvent> narratives;
 	private Reader reader;
 
 	void Start () {
-		narratives = new Dictionary<condition, narrative>();
+		narratives = new Dictionary<condition, NarrativeEvent>();
 		reader = new Reader("Assets/_script/test.slum", this);
-		KeyValuePair<condition, NarrativeEvent> test = reader.readNextScene();
+		// Read all scenes into dictionary
+		KeyValuePair<condition, NarrativeEvent> temp;
+		while(reader.readNextScene(out temp)){
+			narratives[temp.Key] = temp.Value;
+		}
 	}
 	
 	void Update () {
 		// This probably doesn't need to be called every frame
-		List<condition> keys = new List<condition>(narratives.Keys);
-		foreach(var k in keys){
-			if(k()){
-				callNarrative(narratives[k]);
-				narratives.Remove(k);
-			}
-		}
+		// List<condition> keys = new List<condition>(narratives.Keys);
+		// foreach(var k in keys){
+		// 	if(k()){
+		// 		callNarrative(narratives[k]);
+		// 		narratives.Remove(k);
+		// 	}
+		// }
 		
 	}
 
-	public void registerNarrativeEvent(condition c, narrative n){
-		narratives[c] = n;
-	}
+	// public void registerNarrativeEvent(condition c, narrative n){
+	// 	narratives[c] = n;
+	// }
 
-	private void callNarrative(narrative n){
-		// Set up persistance here
-		n();
-	}
+
+	// Temp
+	// private void callNarrative(narrative n){
+	// 	// Set up persistance here
+	// 	n();
+	// }
 
 	// All the variables the reader would check are ints so this should be fine
 	// Could change to a template if needed later

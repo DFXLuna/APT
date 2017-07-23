@@ -13,10 +13,17 @@ public class NarrativeManager : MonoBehaviour {
 	void Start () {
 		narratives = new Dictionary<condition, NarrativeEvent>();
 		reader = new Reader("Assets/_script/test.slum", this);
-		// Read all scenes into dictionary
-		KeyValuePair<condition, NarrativeEvent> temp;
-		while(reader.readNextScene(out temp)){
-			narratives[temp.Key] = temp.Value;
+		if(GetComponent<Persistance>().persistanceManager.GetComponent<PersistanceManager>().isSaved()){
+			loadNarratives();
+			Debug.Log("Loading narratives");
+		}
+		else{
+			Debug.Log("Creating narratives");
+			// Read all scenes into dictionary
+			KeyValuePair<condition, NarrativeEvent> temp;
+			while(reader.readNextScene(out temp)){
+				narratives[temp.Key] = temp.Value;
+			}
 		}
 	}
 	
@@ -42,6 +49,16 @@ public class NarrativeManager : MonoBehaviour {
 	// 	// Set up persistance here
 	// 	n();
 	// }
+
+	public void saveNarratives(){
+		GetComponent<Persistance>().persistanceManager.
+			GetComponent<PersistanceManager>().saveNarratives(narratives);
+	}
+
+	private void loadNarratives(){
+		narratives = GetComponent<Persistance>().persistanceManager.
+			GetComponent<PersistanceManager>().loadNarratives();
+	}
 
 	// All the variables the reader would check are ints so this should be fine
 	// Could change to a template if needed later

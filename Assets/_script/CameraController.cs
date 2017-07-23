@@ -95,6 +95,7 @@ public class CameraController : MonoBehaviour {
 			if(SceneManager.GetActiveScene().name == "main"){
 				world.GetComponent<HomeManager>().saveHomes();
 				world.GetComponent<EconomyManager>().saveCash();
+				world.GetComponent<NarrativeManager>().saveNarratives();
 				SceneManager.LoadScene("dialogue");
 			}
 			else{

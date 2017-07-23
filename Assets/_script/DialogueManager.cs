@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using NarrativeTypes;
 
 public class DialogueManager : MonoBehaviour {
 	public GameObject canvas;
@@ -11,6 +12,8 @@ public class DialogueManager : MonoBehaviour {
 	private GameObject textBox;
 	private GameObject textName;
 	private GameObject textContent;
+
+	private Dictionary<condition, NarrativeEvent> narratives;
 
 	void Start () {
 		// Instantiate textbox and get ready to receive text
@@ -29,8 +32,14 @@ public class DialogueManager : MonoBehaviour {
 		if(!tryGetChildwithTag("TextContent", textBox, out textContent)){
 			throw new Exception("Can't find child with tag 'TextContent'");
 		}
+		//HACK FIX THIS
+		narratives = 
+			GetComponent<Persistance>().persistanceManager.
+				GetComponent<PersistanceManager>().grabNarratives();
 
-		
+		foreach(var k in narratives.Keys){
+			narratives[k].print();
+		}
 	}
 
 

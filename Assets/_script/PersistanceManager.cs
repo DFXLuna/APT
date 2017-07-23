@@ -3,13 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HomeType;
+using NarrativeTypes;
 
 public class PersistanceManager : MonoBehaviour {
 	public static PersistanceManager p;
+	// HomeManager
 	private static Home[] _homes;
+	// EconomyManager
 	private static bool _isSaved;
 	private static int _cash;
 	private static int _cashUpdateAmount;
+	// Narrative Manager
+	private static Dictionary<condition, NarrativeEvent> _narratives;
 
 
 	void Awake(){
@@ -26,6 +31,7 @@ public class PersistanceManager : MonoBehaviour {
 		}
 	}
 
+	// HomeManager
 	public void saveHomes(Home[] homes){
 		for(int i = 0; i <homes.Length; i++){
 			if(homes[i] != null){
@@ -50,7 +56,8 @@ public class PersistanceManager : MonoBehaviour {
 		}
 		return false;
 	}
-	
+
+	// EconomyManager
 	public void saveCash(int cash, int cashUpdateAmount){
 		_cash = cash;
 		_cashUpdateAmount = cashUpdateAmount;
@@ -59,11 +66,25 @@ public class PersistanceManager : MonoBehaviour {
 
 	public int loadCash(out int cash){
 		cash = _cash;
-		// HACK Fix this
-		_isSaved = false;
 		return _cashUpdateAmount;
 	}
+
+	public void saveNarratives(Dictionary<condition, NarrativeEvent> narratives){
+		_narratives = narratives;
+		Debug.Log("Narratives saved");
+	}
+
+	public Dictionary<condition, NarrativeEvent> loadNarratives(){
+		// HACK Fix this
+		_isSaved = false;
+		return _narratives;
+	}
+	// HACK FIX THIS
+	public Dictionary<condition, NarrativeEvent> grabNarratives(){
+		return _narratives;
+	}
 	
+	//Bandaid
 	public bool isSaved(){
 		return _isSaved;
 	}

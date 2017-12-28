@@ -1,4 +1,4 @@
-# Slumlord Simulator : An Isometric Town Management Game (Probably)
+# APT : An Isometric Apartment Management Game (Probably)
 
 ## Dev requirements
 
